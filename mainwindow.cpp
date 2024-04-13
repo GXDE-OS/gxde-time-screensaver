@@ -63,7 +63,9 @@ MainWindow::MainWindow(QWidget *parent)
     }
     else {
         ui->m_iconShow->setVisible(false);
-        ui->m_systemName->setVisible(false);
+        ui->m_systemName->setText("©2023～" + QDateTime::currentDateTime().toString("yyyy") + " gfdgd xi");
+        ui->m_systemName->setAlignment(Qt::AlignBottom);
+
     }
     // 句子更新 QTimer
     m_updateSentencesTimer = new QTimer();
