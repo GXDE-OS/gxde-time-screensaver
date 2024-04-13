@@ -16,8 +16,6 @@
 
 #include <QFile>
 
-#include <random>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -76,16 +74,18 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::ChangePoem()
 {
-    QUrl url("https://v1.hitokoto.cn");
+    QUrl url("https://v1.hitokoto.cn/?c=d&c=i&c=k");
     QUrlQuery query;
     query.addQueryItem("type", "DESKDICT");
-    query.addQueryItem("client", "GXDE");
-    query.addQueryItem("keyfrom", "GXDE");
+    query.addQueryItem("c", "d");
+    query.addQueryItem("c", "i");
+    query.addQueryItem("c", "k");
     query.addQueryItem("num", "4");
     query.addQueryItem("ver", "2.0");
     query.addQueryItem("le", "eng");
     query.addQueryItem("doctype", "json");
     url.setQuery(query.toString(QUrl::FullyEncoded));
+    qDebug() << url;
     QNetworkRequest request(url);
     QNetworkAccessManager *m_http = new QNetworkAccessManager(this);
     QNetworkReply *reply = m_http->get(request);
@@ -120,30 +120,40 @@ void MainWindow::ChangePoem()
         QJsonValue hitokoto = object.value("hitokoto");
         QJsonValue from = object.value("from");
         QJsonValue from_who = object.value("from_who");
-        // 显示文本
-        QString showText = "<p>" + hitokoto.toString() + "</p><p align='right'>";
-        QString who = "";
-        if (!from.isNull()) {
-            who += "《" + from.toString() + "》";
-        }
-        if (!from_who.isNull()) {
-            who += from_who.toString();
-        }
-        if (who.length() > 0) {
-            // 有内容，添加破折号
-            who = "——" + who;
-        }
-        showText += who + "</p>";
-        ui->m_poem->setText(showText);
+        this->ShowPoemText(hitokoto, from, from_who);
         delete m_http;
     });
 }
 
-QJsonObject MainWindow::GetSentenceOffLine()
+void MainWindow::ShowPoemText(QJsonValue hitokoto, QJsonValue from, QJsonValue from_who)
 {
-    std::default_random_engine e;
-    std::uniform_int_distribution u(0, offLineSentence_count);
+    // 显示文本
+    QString showText = "<p>" + hitokoto.toString() + "</p><p align='right'>";
+    QString who = "";
+    if (!from.isNull()) {
+        who += "《" + from.toString() + "》";
+    }
+    if (!from_who.isNull()) {
+        who += from_who.toString();
+    }
+    if (who.length() > 0) {
+        // 有内容，添加破折号
+        who = "——" + who;
+    }
+    showText += who + "</p>";
+    ui->m_poem->setText(showText);
+}
 
+void MainWindow::GetSentenceOffLine()
+{
+    // 通过随机数随机选择句子
+    srand(time(0)); // 使用时间种子
+    int id = rand() % (offLineSentence_count - 1) + 1;
+    QJsonObject object = offLineSentence.at(id).toObject();
+    QJsonValue hitokoto = object.value("hitokoto");
+    QJsonValue from = object.value("from");
+    QJsonValue from_who = object.value("from_who");
+    this->ShowPoemText(hitokoto, from, from_who);
 }
 
 MainWindow::~MainWindow()

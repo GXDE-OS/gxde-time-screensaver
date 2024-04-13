@@ -26,7 +26,8 @@ private:
     void ChangeInformation();
     void ChangePoem();
     void ExitScreenSaver();
-    QJsonObject GetSentenceOffLine();
+    void ShowPoemText(QJsonValue hitokoto, QJsonValue from, QJsonValue from_who);
+    void GetSentenceOffLine();
     QJsonArray offLineSentence;
     int offLineSentence_count;
     QDateTime firstRunTime;
