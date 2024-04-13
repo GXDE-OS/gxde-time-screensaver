@@ -4,6 +4,12 @@ GXDE 一言屏保，可以显示时间和句子（句子来自一言）
 
 ![截图_选择区域_20240413210018.png](https://storage.deepin.org/thread/202404131305187727_截图_选择区域_20240413210018.png)
 
+## GXDE 如何安装？
+```bash
+sudo apt update
+sudo apt install gxde-time-screensaver
+```
+
 ## 如何编译
 在 GXDE（推荐）或 deepin、UOS 下输入：  
 ```bash
