@@ -23,18 +23,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // 隐藏标题栏
-    this->setWindowFlags(Qt::Tool                       // 此属性无最大最小化按键
+    /*this->setWindowFlags(Qt::Tool                       // 此属性无最大最小化按键
                          |Qt::WindowStaysOnTopHint       // 窗口保持在顶部提示
                          |Qt::FramelessWindowHint        // 无框窗口提示
-                                                                                    |Qt::X11BypassWindowManagerHint // 不被X11窗口管理器管理
+                         |Qt::X11BypassWindowManagerHint // 不被X11窗口管理器管理
                                                          // 一但运行，除非被 kill，将无法被控制
                                                          // 也是作为屏保正常运行时的必须属性
-     );
-    //this->setAttribute(Qt::WA_TranslucentBackground);           // 半透明的背景
-    //this->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
+     );*/
+    this->setWindowFlags(Qt::X11BypassWindowManagerHint);
+    this->setAttribute(Qt::WA_TranslucentBackground);           // 半透明的背景
+    this->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
     // 此外将鼠标事件穿透到标准屏幕保护程序，程序收到任何移动事件后将自动还原到此前状态
     // 如果未穿透，将可用作普通程序使用，您可以用来定义为某种仅支持鼠标操作的在线资源页面
-    //this->setStyleSheet("background:transparent");
+    this->setStyleSheet("background:transparent");
 
     // 设置全屏
     QDesktopWidget *desktop = QApplication::desktop();
