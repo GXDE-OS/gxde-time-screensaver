@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDateTime>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,6 +23,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     void ChangeInformation();
+    void ExitScreenSaver();
     QDateTime firstRunTime;
+    QTimer *m_updateTimeTimer;
 };
 #endif // MAINWINDOW_H
