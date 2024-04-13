@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QDateTime>
 #include <QTimer>
+#include <QJsonArray>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,8 +24,14 @@ private slots:
 private:
     Ui::MainWindow *ui;
     void ChangeInformation();
+    void ChangePoem();
     void ExitScreenSaver();
+    QJsonObject GetSentenceOffLine();
+    QJsonArray offLineSentence;
+    int offLineSentence_count;
     QDateTime firstRunTime;
     QTimer *m_updateTimeTimer;
+    QTimer *m_updateSentencesTimer;
 };
 #endif // MAINWINDOW_H
+

@@ -6,6 +6,17 @@
 #include <QDateTime>
 #include <cmath>
 #include <QDebug>
+#include <QUrlQuery>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+// Json
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
+#include <QFile>
+
+#include <random>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -48,6 +59,91 @@ MainWindow::MainWindow(QWidget *parent)
     exitButton->setAlignment(Qt::AlignRight);
     ui->m_timeLayout->addWidget(exitButton, 0, 0);
     ui->m_iconShow->setMinimumWidth(ui->m_iconShow->height()); // 以便可以正确显示图标
+    // 句子更新 QTimer
+    m_updateSentencesTimer = new QTimer();
+    m_updateSentencesTimer->setInterval(60 * 1000);
+    connect(m_updateSentencesTimer, &QTimer::timeout, this, &MainWindow::ChangePoem);
+    m_updateSentencesTimer->start();
+    // 读取离线词库
+    QFile sentence(":/Poem/poem.json");
+    sentence.open(QFile::ReadOnly);
+    offLineSentence = QJsonDocument::fromJson(sentence.readAll()).array();
+    offLineSentence_count = offLineSentence.count(); // 提前计算数据以减少损耗
+    sentence.close();
+    ChangePoem();
+}
+
+
+void MainWindow::ChangePoem()
+{
+    QUrl url("https://v1.hitokoto.cn");
+    QUrlQuery query;
+    query.addQueryItem("type", "DESKDICT");
+    query.addQueryItem("client", "GXDE");
+    query.addQueryItem("keyfrom", "GXDE");
+    query.addQueryItem("num", "4");
+    query.addQueryItem("ver", "2.0");
+    query.addQueryItem("le", "eng");
+    query.addQueryItem("doctype", "json");
+    url.setQuery(query.toString(QUrl::FullyEncoded));
+    QNetworkRequest request(url);
+    QNetworkAccessManager *m_http = new QNetworkAccessManager(this);
+    QNetworkReply *reply = m_http->get(request);
+    connect(reply, &QNetworkReply::finished, this, [this, m_http](){
+        QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+        if (reply->error() != QNetworkReply::NoError) {
+            qDebug() << reply->errorString();
+            GetSentenceOffLine(); // 如果无法访问则使用离线数据库
+            return;
+        }
+        QByteArray data = reply->readAll();
+        qDebug() << data;
+        // 解析数据
+        // 数据例子：
+        /*
+        {
+            "id": 6256,
+            "uuid": "b2f3834f-5f52-4b62-bb3c-f9fb98901419",
+            "hitokoto": "我们在努力扩大自己，以靠近，以触及我们自身以外的世界。",
+            "type": "k",
+            "from": "豪尔赫·路易斯·博尔赫斯",
+            "from_who": "博尔赫斯谈话录",
+            "creator": "Irony",
+            "creator_uid": 4464,
+            "reviewer": 1044,
+            "commit_from": "web",
+            "created_at": "1592126239",
+            "length": 27
+        }*/
+        QJsonDocument document = QJsonDocument::fromJson(data);
+        QJsonObject object = document.object();
+        QJsonValue hitokoto = object.value("hitokoto");
+        QJsonValue from = object.value("from");
+        QJsonValue from_who = object.value("from_who");
+        // 显示文本
+        QString showText = "<p>" + hitokoto.toString() + "</p><p align='right'>";
+        QString who = "";
+        if (!from.isNull()) {
+            who += "《" + from.toString() + "》";
+        }
+        if (!from_who.isNull()) {
+            who += from_who.toString();
+        }
+        if (who.length() > 0) {
+            // 有内容，添加破折号
+            who = "——" + who;
+        }
+        showText += who + "</p>";
+        ui->m_poem->setText(showText);
+        delete m_http;
+    });
+}
+
+QJsonObject MainWindow::GetSentenceOffLine()
+{
+    std::default_random_engine e;
+    std::uniform_int_distribution u(0, offLineSentence_count);
+
 }
 
 MainWindow::~MainWindow()
@@ -73,7 +169,6 @@ void MainWindow::ChangeInformation()
     ui->m_hourTime->display(hour);
     ui->m_minTime->display(minute);
     ui->m_secondTime->display(second % 60);
-    qDebug() << "a";
 }
 
 void MainWindow::ExitScreenSaver()

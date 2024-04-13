@@ -5,5 +5,7 @@
     <qresource prefix="/Background">
         <file>background.jpg</file>
     </qresource>
-    <qresource prefix="/Poem"/>
+    <qresource prefix="/Poem">
+        <file>poem.json</file>
+    </qresource>
 </RCC>
