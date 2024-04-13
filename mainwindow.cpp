@@ -31,8 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
                                                          // 也是作为屏保正常运行时的必须属性
      );
     //this->setAttribute(Qt::WA_TranslucentBackground);           // 半透明的背景
-    this->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
-    ui->m_iconShow->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
+    //this->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
+    //ui->m_iconShow->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
     // 此外将鼠标事件穿透到标准屏幕保护程序，程序收到任何移动事件后将自动还原到此前状态
     // 如果未穿透，将可用作普通程序使用，您可以用来定义为某种仅支持鼠标操作的在线资源页面
 
