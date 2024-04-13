@@ -56,7 +56,15 @@ MainWindow::MainWindow(QWidget *parent)
     });
     exitButton->setAlignment(Qt::AlignRight);
     ui->m_timeLayout->addWidget(exitButton, 0, 0);
-    ui->m_iconShow->setMinimumWidth(ui->m_iconShow->height()); // 以便可以正确显示图标
+    // 判断系统是否为 GXDE
+    if(QFile::exists("/etc/profile.d/gxde.sh")) {
+        // 如果是则显示 logo
+        ui->m_iconShow->setMinimumWidth(ui->m_iconShow->height()); // 以便可以正确显示图标
+    }
+    else {
+        ui->m_iconShow->setVisible(false);
+        ui->m_systemName->setVisible(false);
+    }
     // 句子更新 QTimer
     m_updateSentencesTimer = new QTimer();
     m_updateSentencesTimer->setInterval(60 * 1000);
