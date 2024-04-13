@@ -3,7 +3,7 @@ Section: utils
 Priority: optional
 Maintainer: gfdgd_xi <3025613752@qq.com>
 Build-Depends:
- debhelper-compat (= 13),
+ debhelper-compat (= 11),
  qtbase5-dev-tools,
  qtbase5-dev,
  qt5-qmake
