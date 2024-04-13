@@ -18,8 +18,8 @@ HEADERS += \
 FORMS += \
     mainwindow.ui
 
-target.path = $${PREFIX}/usr/lib/deepin-screensaver/modules/
-cover.path = $${PREFIX}/usr/lib/deepin-screensaver/modules/cover/
+target.path = $${PREFIX}/lib/deepin-screensaver/modules/
+cover.path = $${PREFIX}/lib/deepin-screensaver/modules/cover/
 cover.files = $$PWD/cover/*.png
 INSTALLS += target cover
 
