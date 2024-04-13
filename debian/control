@@ -1,0 +1,17 @@
+Source: gxde-time-screensaver
+Section: utils
+Priority: optional
+Maintainer: gfdgd_xi <3025613752@qq.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ qtbase5-dev-tools,
+ qtbase5-dev,
+ qt5-qmake
+Homepage: https://gitee.com/GXDE-OS/gxde-time-screensaver
+
+Package: gxde-time-screensaver
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: GXDE Screen Saver with time and good sentences
