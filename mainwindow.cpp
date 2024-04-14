@@ -6,6 +6,8 @@
 #include <QDateTime>
 #include <cmath>
 #include <QDebug>
+#include <QWindow>
+// http
 #include <QUrlQuery>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -16,6 +18,9 @@
 
 #include <QFile>
 
+#include <xcb/xcb.h>
+#include <X11/Xlib.h>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -23,22 +28,22 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // 隐藏标题栏
-    this->setWindowFlags(Qt::Tool                       // 此属性无最大最小化按键
+    /*this->setWindowFlags(Qt::Tool                       // 此属性无最大最小化按键
                          |Qt::WindowStaysOnTopHint       // 窗口保持在顶部提示
                          |Qt::FramelessWindowHint        // 无框窗口提示
                          |Qt::X11BypassWindowManagerHint // 不被X11窗口管理器管理
                                                          // 一但运行，除非被 kill，将无法被控制
                                                          // 也是作为屏保正常运行时的必须属性
-     );
+     );*/
     //this->setAttribute(Qt::WA_TranslucentBackground);           // 半透明的背景
     //this->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
     //ui->m_iconShow->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
     // 此外将鼠标事件穿透到标准屏幕保护程序，程序收到任何移动事件后将自动还原到此前状态
     // 如果未穿透，将可用作普通程序使用，您可以用来定义为某种仅支持鼠标操作的在线资源页面
-
+setWindowFlag(Qt::WindowTransparentForInput, true);
     // 设置全屏
     QDesktopWidget *desktop = QApplication::desktop();
-    this->resize(desktop->width(), desktop->height());
+    //this->resize(desktop->width(), desktop->height());
     // 设置定时事件用于更新数据
     m_updateTimeTimer = new QTimer();
     connect(m_updateTimeTimer, &QTimer::timeout, this, &MainWindow::ChangeInformation);
@@ -81,6 +86,41 @@ MainWindow::MainWindow(QWidget *parent)
     ChangePoem();
 }
 
+QSize MainWindow::mapFromHandle(const QSize &handleSize)
+{
+    qreal ratio = devicePixelRatioF();
+    qDebug() << "parent window handle size" << handleSize << "devicePixelRatio" << ratio;
+
+    if (ratio > 0 && ratio != 1.0)
+        return handleSize / ratio;
+    else
+        return handleSize;
+}
+
+bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+{
+    Q_UNUSED(result);
+    if (eventType == "xcb_generic_event_t") {
+        xcb_generic_event_t *event = reinterpret_cast<xcb_generic_event_t *>(message);
+        int type = (event->response_type & ~0x80);
+        if (XCB_CONFIGURE_NOTIFY == type) {
+            xcb_configure_notify_event_t *ce = reinterpret_cast<xcb_configure_notify_event_t *>(event);
+            qInfo() << "parent window size changed" << ce->width << ce->height;
+            QSize widSize = mapFromHandle(QSize(ce->width, ce->height));
+            if (widSize != size()) {
+                qInfo() << "update window size:" << widSize;
+                resize(widSize);
+            }
+        } else if (XCB_DESTROY_NOTIFY == type) {
+            xcb_destroy_notify_event_t *ce = reinterpret_cast<xcb_destroy_notify_event_t *>(event);
+            if (ce->window == Window(this->windowHandle()->winId())) {
+                qInfo() << "parent window closed";
+                QMetaObject::invokeMethod(this, "close", Qt::QueuedConnection);
+            }
+        }
+    }
+    return false;
+}
 
 void MainWindow::ChangePoem()
 {

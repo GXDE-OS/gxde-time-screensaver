@@ -16,6 +16,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
     ~MainWindow();
 
 private slots:
@@ -33,6 +34,7 @@ private:
     QDateTime firstRunTime;
     QTimer *m_updateTimeTimer;
     QTimer *m_updateSentencesTimer;
+    QSize mapFromHandle(const QSize &handleSize);
 };
 #endif // MAINWINDOW_H
 
