@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QStringList>
 #include <QWindow>
+#include <QDebug>
 
 #include <X11/Xlib.h>
 
