@@ -6,7 +6,9 @@ Build-Depends:
  debhelper-compat (= 11),
  qtbase5-dev-tools,
  qtbase5-dev,
- qt5-qmake
+ qt5-qmake,
+ pkg-config,
+ libx11-dev
 Homepage: https://gitee.com/GXDE-OS/gxde-time-screensaver
 
 Package: gxde-time-screensaver
