@@ -1,5 +1,6 @@
-gxde-time-screensaver (1.0.1) UNRELEASED; urgency=medium
+gxde-time-screensaver (1.1.0) UNRELEASED; urgency=medium
 
-  * Initial release. (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * Repair problem when choosing screensaver
+  * 
 
- -- gfdgd_xi <3025613752@qq.com>  Sat, 13 Apr 2024 16:27:23 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Sun, 14 Apr 2024 08:33:23 +0800
