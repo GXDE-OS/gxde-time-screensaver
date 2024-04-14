@@ -27,23 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 隐藏标题栏
-    /*this->setWindowFlags(Qt::Tool                       // 此属性无最大最小化按键
-                         |Qt::WindowStaysOnTopHint       // 窗口保持在顶部提示
-                         |Qt::FramelessWindowHint        // 无框窗口提示
-                         |Qt::X11BypassWindowManagerHint // 不被X11窗口管理器管理
-                                                         // 一但运行，除非被 kill，将无法被控制
-                                                         // 也是作为屏保正常运行时的必须属性
-     );*/
-    //this->setAttribute(Qt::WA_TranslucentBackground);           // 半透明的背景
-    //this->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
-    //ui->m_iconShow->setAttribute(Qt::WA_TransparentForMouseEvents, true); // 鼠标事件穿透
-    // 此外将鼠标事件穿透到标准屏幕保护程序，程序收到任何移动事件后将自动还原到此前状态
-    // 如果未穿透，将可用作普通程序使用，您可以用来定义为某种仅支持鼠标操作的在线资源页面
-setWindowFlag(Qt::WindowTransparentForInput, true);
-    // 设置全屏
-    QDesktopWidget *desktop = QApplication::desktop();
-    //this->resize(desktop->width(), desktop->height());
+    setWindowFlag(Qt::WindowTransparentForInput, true);
     // 设置定时事件用于更新数据
     m_updateTimeTimer = new QTimer();
     connect(m_updateTimeTimer, &QTimer::timeout, this, &MainWindow::ChangeInformation);
@@ -53,14 +37,14 @@ setWindowFlag(Qt::WindowTransparentForInput, true);
     firstRunTime = QDateTime::currentDateTime();
     // 设置屏保背景
     this->setStyleSheet("#MainWindow {border-image: url(:/Background/background.jpg);} * {color: white;}");
-    // 添加退出按钮
-    QLabel *exitButton = new QLabel("<a style='text-decoration: none; color: white;' href='https://www.gfdgdxi.top'>" + tr("退出") + "</a>");
+    // 添加退出按钮（已废弃）
+    /*QLabel *exitButton = new QLabel("<a style='text-decoration: none; color: white;' href='https://www.gfdgdxi.top'>" + tr("退出") + "</a>");
     // 使用超链接实现 QLabel 点击事件
     connect(exitButton, &QLabel::linkActivated, this, [this](){
         this->ExitScreenSaver();
     });
     exitButton->setAlignment(Qt::AlignRight);
-    ui->m_timeLayout->addWidget(exitButton, 0, 0);
+    ui->m_timeLayout->addWidget(exitButton, 0, 0);*/
     // 判断系统是否为 GXDE
     if(QFile::exists("/etc/profile.d/gxde.sh")) {
         // 如果是则显示 logo
