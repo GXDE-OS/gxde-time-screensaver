@@ -50,17 +50,6 @@ MainWindow::MainWindow(QWidget *parent)
     });
     exitButton->setAlignment(Qt::AlignRight);
     ui->m_timeLayout->addWidget(exitButton, 0, 0);*/
-    // 判断系统是否为 GXDE
-    if(QFile::exists("/etc/profile.d/gxde.sh")) {
-        // 如果是则显示 logo
-        ui->m_iconShow->setMinimumWidth(ui->m_iconShow->height()); // 以便可以正确显示图标
-    }
-    else {
-        ui->m_iconShow->setVisible(false);
-        ui->m_systemName->setText("©2023～" + QDateTime::currentDateTime().toString("yyyy") + " gfdgd xi");
-        ui->m_systemName->setAlignment(Qt::AlignBottom);
-
-    }
     // 句子更新 QTimer
     m_updateSentencesTimer = new QTimer();
     m_updateSentencesTimer->setInterval(60 * 1000);
@@ -82,9 +71,11 @@ QImage MainWindow::GetSystemImage()
                         "/com/deepin/wm",
                         "com.deepin.wm");
     QString backgroundPath = dbus.call("GetCurrentWorkspaceBackground").arguments().at(0).toUrl().path();
+    // 如果能正常读取到数据，则优先使用读取到的
     if (QFile::exists(backgroundPath)) {
         return QImage(backgroundPath);
     }
+    // 反之使用默认壁纸
     QImage(":/Background/background.jpg");
 }
 

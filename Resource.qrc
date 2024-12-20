@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/Icon">
         <file>logo.svg</file>
+        <file>icon.svg</file>
     </qresource>
     <qresource prefix="/Background">
         <file>background.jpg</file>

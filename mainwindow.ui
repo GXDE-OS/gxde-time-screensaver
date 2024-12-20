@@ -18,6 +18,10 @@
   <property name="windowTitle">
    <string>Screen Saver</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Resource.qrc">
+    <normaloff>:/Icon/icon.svg</normaloff>:/Icon/icon.svg</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true"/>
   </property>
@@ -108,7 +112,7 @@
       <item>
        <widget class="QLabel" name="m_iconShow">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -119,25 +123,13 @@
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">image: url(:/Icon/logo.svg);</string>
+         <string notr="true">background-image: url(:/Icon/logo.svg);
+background-origin: content;
+background-position: left;
+background-repeat: no-repeat;</string>
         </property>
         <property name="text">
          <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="m_systemName">
-        <property name="font">
-         <font>
-          <pointsize>20</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: #00e7e7;</string>
-        </property>
-        <property name="text">
-         <string>&lt;b&gt;GXDE&lt;/b&gt;</string>
         </property>
        </widget>
       </item>
@@ -219,6 +211,8 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
