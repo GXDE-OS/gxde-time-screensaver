@@ -1,6 +1,7 @@
-gxde-time-screensaver (1.1.0) UNRELEASED; urgency=medium
+gxde-time-screensaver (1.2.0) UNRELEASED; urgency=medium
 
   * Repair problem when choosing screensaver
-  * 
+  * 支持读取系统默认壁纸
+  * 更新 logo
 
- -- gfdgd_xi <3025613752@qq.com>  Sun, 14 Apr 2024 08:33:23 +0800
+ -- gfdgd_xi <3025613752@qq.com>  Fri, 20 Dec 2024 22:34:50 +0800
