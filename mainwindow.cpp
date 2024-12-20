@@ -16,6 +16,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#include <QPainter>
+#include <QDBusInterface>
+
 #include <QFile>
 
 #include <xcb/xcb.h>
@@ -36,7 +39,9 @@ MainWindow::MainWindow(QWidget *parent)
     // 记录初始运行时间
     firstRunTime = QDateTime::currentDateTime();
     // 设置屏保背景
-    this->setStyleSheet("#MainWindow {border-image: url(:/Background/background.jpg);} * {color: white;}");
+    m_background = GetSystemImage();
+
+    //this->setStyleSheet("#MainWindow {border-image: url(:/Background/background.jpg);} * {color: white;}");
     // 添加退出按钮（已废弃）
     /*QLabel *exitButton = new QLabel("<a style='text-decoration: none; color: white;' href='https://www.gfdgdxi.top'>" + tr("退出") + "</a>");
     // 使用超链接实现 QLabel 点击事件
@@ -68,6 +73,19 @@ MainWindow::MainWindow(QWidget *parent)
     offLineSentence_count = offLineSentence.count(); // 提前计算数据以减少损耗
     sentence.close();
     ChangePoem();
+}
+
+QImage MainWindow::GetSystemImage()
+{
+    // 使用 dbus 获取当前壁纸
+    QDBusInterface dbus("com.deepin.wm",
+                        "/com/deepin/wm",
+                        "com.deepin.wm");
+    QString backgroundPath = dbus.call("GetCurrentWorkspaceBackground").arguments().at(0).toUrl().path();
+    if (QFile::exists(backgroundPath)) {
+        return QImage(backgroundPath);
+    }
+    QImage(":/Background/background.jpg");
 }
 
 QSize MainWindow::mapFromHandle(const QSize &handleSize)
@@ -229,3 +247,21 @@ void MainWindow::on_m_exitButton_clicked()
     ExitScreenSaver();
 }
 
+void MainWindow::paintEvent(QPaintEvent *e)
+{
+    QImage scaleImage = m_background.scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    QPainter painter;
+    painter.begin(this);
+    int windowWidth = width();
+    int windowHeight = height();
+    int imageWidth = scaleImage.width();
+    int imageHeight = scaleImage.height();
+    int x = (windowWidth - imageWidth) / 2;
+    int y = (windowHeight - imageHeight) / 2;
+    painter.drawImage(x, y, scaleImage);
+    painter.setPen(QPen(QColor("#99252525")));
+    painter.setBrush(QBrush(QColor("#99252525")));
+    painter.drawRect(0, 0, windowWidth, windowHeight);
+    painter.end();
+    //QMainWindow::paintEvent(e);
+}

@@ -23,6 +23,7 @@ private slots:
     void on_m_exitButton_clicked();
 
 private:
+    QImage GetSystemImage();
     Ui::MainWindow *ui;
     void ChangeInformation();
     void ChangePoem();
@@ -34,7 +35,10 @@ private:
     QDateTime firstRunTime;
     QTimer *m_updateTimeTimer;
     QTimer *m_updateSentencesTimer;
+    QImage m_background;
     QSize mapFromHandle(const QSize &handleSize);
+
+    void paintEvent(QPaintEvent*);
 };
 #endif // MAINWINDOW_H
 
