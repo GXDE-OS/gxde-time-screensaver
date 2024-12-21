@@ -1,4 +1,4 @@
-name: Building Program
+name: Building Program (Other distro)
 run-name: Building ${{ GITHUB.REPOSITORY }}
 
 on:
