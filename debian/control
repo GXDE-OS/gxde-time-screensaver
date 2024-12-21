@@ -10,7 +10,6 @@ Build-Depends:
  pkg-config,
  libx11-dev,
  qtchooser,
- qtbase5-private-dev
 Homepage: https://gitee.com/GXDE-OS/gxde-time-screensaver
 
 Package: gxde-time-screensaver
