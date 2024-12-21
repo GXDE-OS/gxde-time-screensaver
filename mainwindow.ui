@@ -23,7 +23,7 @@
     <normaloff>:/Icon/icon.svg</normaloff>:/Icon/icon.svg</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">color: white;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">

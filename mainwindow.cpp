@@ -62,6 +62,14 @@ MainWindow::MainWindow(QWidget *parent)
     offLineSentence_count = offLineSentence.count(); // 提前计算数据以减少损耗
     sentence.close();
     ChangePoem();
+    // 修改时间默认字体大小
+    QFont timeFont = ui->m_time->font();
+    timeFont.setPointSize(timeFont.pointSize() * 2);
+    ui->m_time->setFont(timeFont);
+    //修改句子默认字体大小
+    QFont senFont = ui->m_poem->font();
+    senFont.setPointSize(timeFont.pointSize() * 1.1);
+    ui->m_poem->setFont(senFont);
 }
 
 QImage MainWindow::GetSystemImage()
