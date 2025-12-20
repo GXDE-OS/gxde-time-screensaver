@@ -20,6 +20,7 @@
 #include <QDBusInterface>
 
 #include <QFile>
+#include <QScreen>
 
 #include <xcb/xcb.h>
 #include <X11/Xlib.h>
@@ -40,6 +41,10 @@ MainWindow::MainWindow(QWidget *parent)
     firstRunTime = QDateTime::currentDateTime();
     // 设置屏保背景
     m_background = GetSystemImage();
+
+    QPixmap pixmap = *ui->m_iconShow->pixmap();
+    pixmap.setDevicePixelRatio(QGuiApplication::primaryScreen()->devicePixelRatio());
+    ui->m_iconShow->setPixmap(pixmap);
 
     //this->setStyleSheet("#MainWindow {border-image: url(:/Background/background.jpg);} * {color: white;}");
     // 添加退出按钮（已废弃）
@@ -248,11 +253,14 @@ void MainWindow::on_m_exitButton_clicked()
 
 void MainWindow::paintEvent(QPaintEvent *e)
 {
-    QImage scaleImage = m_background.scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    qreal ratio = QGuiApplication::primaryScreen()->devicePixelRatio();
+    QSize backgroundSize = size() * ratio;
+    QImage scaleImage = m_background.scaled(backgroundSize, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    scaleImage.setDevicePixelRatio(ratio);
     QPainter painter;
     painter.begin(this);
-    int windowWidth = width();
-    int windowHeight = height();
+    int windowWidth = width() * ratio;
+    int windowHeight = height()* ratio;
     int imageWidth = scaleImage.width();
     int imageHeight = scaleImage.height();
     int x = (windowWidth - imageWidth) / 2;

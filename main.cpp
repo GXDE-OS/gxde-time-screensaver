@@ -18,6 +18,11 @@ int main(int argc, char *argv[])
     }
 
     QApplication a(argc, argv);
+
+    a.setAttribute(Qt::AA_EnableHighDpiScaling, true);
+    a.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
+
+
     CommandLineManager::instance()->process(a.arguments());
     if (CommandLineManager::instance()->isSet("window-id")) {
         QString windowId = CommandLineManager::instance()->value("window-id");

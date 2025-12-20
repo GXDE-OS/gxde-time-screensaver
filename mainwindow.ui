@@ -123,13 +123,19 @@
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-image: url(:/Icon/logo.svg);
-background-origin: content;
-background-position: left;
-background-repeat: no-repeat;</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="Resource.qrc">:/Icon/logo.svg</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>false</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
         </property>
        </widget>
       </item>
