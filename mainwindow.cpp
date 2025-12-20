@@ -42,6 +42,13 @@ MainWindow::MainWindow(QWidget *parent)
     // 设置屏保背景
     m_background = GetSystemImage();
 
+    ui->label->setHidden(true);
+    ui->label_2->setHidden(true);
+    ui->label_3->setHidden(true);
+    ui->m_hourTime->setHidden(true);
+    ui->m_minTime->setHidden(true);
+    ui->m_secondTime->setHidden(true);
+
     QPixmap pixmap = *ui->m_iconShow->pixmap();
     pixmap.setDevicePixelRatio(QGuiApplication::primaryScreen()->devicePixelRatio());
     ui->m_iconShow->setPixmap(pixmap);
