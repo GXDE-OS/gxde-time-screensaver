@@ -53,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
     pixmap.setDevicePixelRatio(QGuiApplication::primaryScreen()->devicePixelRatio());
     ui->m_iconShow->setPixmap(pixmap);
 
+    ui->m_iconShow->setVisible(false);
+
     //this->setStyleSheet("#MainWindow {border-image: url(:/Background/background.jpg);} * {color: white;}");
     // 添加退出按钮（已废弃）
     /*QLabel *exitButton = new QLabel("<a style='text-decoration: none; color: white;' href='https://www.gfdgdxi.top'>" + tr("退出") + "</a>");
@@ -137,55 +139,8 @@ bool MainWindow::nativeEventFilter(const QByteArray &eventType, void *message, l
 
 void MainWindow::ChangePoem()
 {
-    QUrl url("https://v1.hitokoto.cn/?c=d&c=i&c=k");
-    QUrlQuery query;
-    query.addQueryItem("type", "DESKDICT");
-    query.addQueryItem("c", "d");
-    query.addQueryItem("c", "i");
-    query.addQueryItem("c", "k");
-    query.addQueryItem("num", "4");
-    query.addQueryItem("ver", "2.0");
-    query.addQueryItem("le", "eng");
-    query.addQueryItem("doctype", "json");
-    url.setQuery(query.toString(QUrl::FullyEncoded));
-    qDebug() << url;
-    QNetworkRequest request(url);
-    QNetworkAccessManager *m_http = new QNetworkAccessManager(this);
-    QNetworkReply *reply = m_http->get(request);
-    connect(reply, &QNetworkReply::finished, this, [this, m_http](){
-        QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-        if (reply->error() != QNetworkReply::NoError) {
-            qDebug() << reply->errorString();
-            GetSentenceOffLine(); // 如果无法访问则使用离线数据库
-            return;
-        }
-        QByteArray data = reply->readAll();
-        qDebug() << data;
-        // 解析数据
-        // 数据例子：
-        /*
-        {
-            "id": 6256,
-            "uuid": "b2f3834f-5f52-4b62-bb3c-f9fb98901419",
-            "hitokoto": "我们在努力扩大自己，以靠近，以触及我们自身以外的世界。",
-            "type": "k",
-            "from": "豪尔赫·路易斯·博尔赫斯",
-            "from_who": "博尔赫斯谈话录",
-            "creator": "Irony",
-            "creator_uid": 4464,
-            "reviewer": 1044,
-            "commit_from": "web",
-            "created_at": "1592126239",
-            "length": 27
-        }*/
-        QJsonDocument document = QJsonDocument::fromJson(data);
-        QJsonObject object = document.object();
-        QJsonValue hitokoto = object.value("hitokoto");
-        QJsonValue from = object.value("from");
-        QJsonValue from_who = object.value("from_who");
-        this->ShowPoemText(hitokoto, from, from_who);
-        delete m_http;
-    });
+    // 使用离线数据
+    GetSentenceOffLine();
 }
 
 void MainWindow::ShowPoemText(QJsonValue hitokoto, QJsonValue from, QJsonValue from_who)
