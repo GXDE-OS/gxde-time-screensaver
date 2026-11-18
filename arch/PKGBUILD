@@ -1,0 +1,36 @@
+# Maintainer: CharOfString <root@charofstring.cc>
+pkgname=gxde-time-screensaver
+pkgver=1.2.2
+pkgrel=1
+pkgdesc='Clock screensaver module for GXDE'
+arch=('x86_64' 'aarch64')
+url="https://github.com/GXDE-OS/gxde-time-screensaver"
+license=('GPL-3.0-or-later')
+depends=('qt5-base' 'libx11' 'libgcc' 'libstdc++' 'glibc')
+makedepends=('git')
+provides=("gxde-time-screensaver-git=$pkgver")
+conflicts=('gxde-time-screensaver-git')
+replaces=('gxde-time-screensaver-git')
+source=()
+sha512sums=()
+
+# 直接使用 PKGBUILD 所在的 git 仓库作为源码 ・ Build from the git checkout this PKGBUILD lives in.
+_srcroot() {
+  git -C "$startdir" rev-parse --show-toplevel
+}
+
+build() {
+  mkdir -p build
+  cd build
+  # 与 debian/rules 一样使用 Qt5 ・ Qt5, same as debian/rules (QT_SELECT=qt5).
+  qmake-qt5 "$(_srcroot)/gxde-time-screensaver.pro" \
+    PREFIX=/usr \
+    QMAKE_CFLAGS_RELEASE="$CFLAGS" \
+    QMAKE_CXXFLAGS_RELEASE="$CXXFLAGS" \
+    QMAKE_LFLAGS_RELEASE="$LDFLAGS"
+  make
+}
+
+package() {
+  make -C build INSTALL_ROOT="$pkgdir" install
+}
